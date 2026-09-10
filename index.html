@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portal Pengurus - Pondok Pesantren 50 Lembang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Pengaturan Dasar */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Bagian Header / Hero Section */
+        .hero {
+            background: linear-gradient(rgba(33, 94, 44, 0.85), rgba(18, 64, 25, 0.85)), 
+                        url('https://images.unsplash.com/photo-1564121211835-e88c852648ab?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 100px 20px 80px 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.1em;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        /* Kontainer Kartu Form */
+        .card-container {
+            max-width: 1100px;
+            margin: -40px auto 30px auto;
+            padding: 0 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Desain Kartu */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            border-bottom: 5px solid #2e7d32;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            font-size: 2em;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1b5e20;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .card-desc {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .btn-akses {
+            display: block;
+            background-color: #2e7d32;
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-akses:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Bagian Tampilan Spreadsheet dengan Sistem Tab */
+        .spreadsheet-section {
+            max-width: 1100px;
+            width: 92%;
+            margin: 20px auto 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-sizing: border-box;
+        }
+
+        .spreadsheet-section h2 {
+            color: #1b5e20;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Desain Tombol Tab */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap; /* Agar rapi jika layar terlalu kecil */
+        }
+
+        .tab-btn {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            flex: 1; /* Membuat lebar tombol sama rata */
+            min-width: 100px;
+            max-width: 200px;
+        }
+
+        .tab-btn:hover {
+            background-color: #c8e6c9;
+        }
+
+        .tab-btn.active {
+            background-color: #2e7d32;
+            color: white;
+            border-color: #2e7d32;
+        }
+
+        /* Konten Tab (Iframe) */
+        .tab-content {
+            display: none; /* Sembunyikan semua tab secara default */
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block; /* Tampilkan hanya tab yang aktif */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .table-responsive {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .table-responsive iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #ffffff;
+            color: #777;
+            margin-top: auto;
+            border-top: 1px solid #eaeaea;
+            font-size: 0.85em;
+        }
+
+        /* Media Query Khusus Layar HP (Mobile) */
+        @media (max-width: 600px) {
+            .hero { padding: 60px 15px 70px 15px; }
+            .hero h1 { font-size: 1.8em; }
+            .card-container { margin-top: -30px; gap: 15px; }
+            .spreadsheet-section { padding: 15px; }
+            .table-responsive { height: 400px; }
+            .tab-btn { padding: 8px 10px; font-size: 0.85em; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>Selamat Datang</h1>
+        <p>Kepada pengurus asrama Pondok Pesantren 50 Lembang. Portal ini dibuat untuk mempermudah akses pendataan dan administrasi santri sehari-hari.</p>
+    </header>
+
+    <div class="card-container">
+        
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-procedures"></i></div>
+            <div class="card-content">
+                <div class="card-title">Santri Sakit</div>
+                <div class="card-desc">Formulir untuk mendata siapa saja santri yang sedang sakit. <strong>Minimal pukul 09.00 pagi.</strong></div>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfiAUVp_Pqcd04YQhcK3Y6nAe98AIkdNlFQLLlbkvPr1UlTcw/viewform?usp=publish-editor" target="_blank" class="btn-akses">Isi Form Sakit</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-home"></i></div>
+            <div class="card-content">
+                <div class="card-title">Santri Pulang</div>
+                <div class="card-desc">Pendataan bagi santri yang mengajukan izin untuk pulang (termasuk lampiran surat).</div>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdsLMyg67CeYpqvsdoYgtIaBKn4quMSHldgekv_lBTVTn-Xwg/viewform?usp=header" target="_blank" class="btn-akses">Isi Form Pulang</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="card-content">
+                <div class="card-title">Santri Melanggar</div>
+                <div class="card-desc">Formulir pencatatan nama-nama santri yang melakukan pelanggaran tata tertib pondok.</div>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfvZCwkOnoTGigGnSUz_ZLxCVN-6jzdyvsvauXIyQx0aR5eXw/viewform?usp=header" target="_blank" class="btn-akses">Isi Form Pelanggaran</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bagian Tampilan Rekap Spreadsheet (Sistem Tab) -->
+    <div class="spreadsheet-section">
+        <h2><i class="fas fa-table"></i> Rekap Data Santri</h2>
+        
+        <!-- Tombol Pilihan Tab -->
+        <div class="tab-container">
+            <!-- onClick akan menjalankan fungsi Javascript di bawah -->
+            <button class="tab-btn active" onclick="bukaTab(event, 'rekapSakit')">Rekap Sakit</button>
+            <button class="tab-btn" onclick="bukaTab(event, 'rekapPulang')">Rekap Pulang</button>
+            <button class="tab-btn" onclick="bukaTab(event, 'rekapMelanggar')">Rekap Melanggar</button>
+        </div>
+
+        <!-- Konten Tab 1: Rekap Sakit (Ditampilkan secara default/active) -->
+        <div id="rekapSakit" class="tab-content active">
+            <div class="table-responsive">
+                <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTQtn1RLVLuLgPFOts_LlaIHufk40TeFFgPW9Ohy4ObRbE3xbzfswWcdECTE1QHua6bhCGG2pdVXonz/pubhtml?gid=836395737&single=true&widget=false&headers=false&chrome=false"></iframe>
+            </div>
+        </div>
+
+        <!-- Konten Tab 2: Rekap Pulang -->
+        <div id="rekapPulang" class="tab-content">
+            <div class="table-responsive">
+                <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vST5-Y5pCN4Yyz1-TVfJB0uuRdjJGjVLWW25klvRXQG07sKo8SD2mFPn-49EJDA5oyaB0hdwoL3-Pbo/pubhtml?gid=300315934&single=true&widget=false&headers=false&chrome=false"></iframe>
+            </div>
+        </div>
+
+        <!-- Konten Tab 3: Rekap Melanggar -->
+        <div id="rekapMelanggar" class="tab-content">
+            <div class="table-responsive">
+                <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTRLhHECzZ4UILkMhMqFYkW45_TbGkO3bJU3xOeRUjZpajVJxdksOIfhUDSYgnxyx4oJiy3Xh7U0gyo/pubhtml?gid=243930929&single=true&widget=false&headers=false&chrome=false"></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 Pengurus Asrama Pondok Pesantren 50 Lembang.
+    </footer>
+
+    <!-- Script Javascript untuk mengaktifkan sistem tab -->
+    <script>
+        function bukaTab(evt, namaTab) {
+            // Sembunyikan semua elemen dengan class="tab-content"
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+
+            // Hapus class "active" dari semua tombol tab
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            // Tampilkan tab yang dipilih saat ini, dan tambahkan class "active" pada tombol yang diklik
+            document.getElementById(namaTab).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+
+</body>
+</html>
